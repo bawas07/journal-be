@@ -9,11 +9,21 @@ import (
 	"go.uber.org/zap"
 )
 
+type DBConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Name     string
+	SSLMode  string
+}
+
 type Config struct {
 	Port    string
 	Logger  *zap.Logger
 	BaseURL string
 	Env     string
+	DB      DBConfig
 }
 
 func Load() *Config {
@@ -27,11 +37,21 @@ func Load() *Config {
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()
 
+	db := DBConfig{
+		Host:     getEnv("DB_HOST", "localhost"),
+		Port:     getEnv("DB_PORT", "5432"),
+		User:     getEnv("DB_USER", "postgres"),
+		Password: getEnv("DB_PASSWORD", ""),
+		Name:     getEnv("DB_NAME", "journaling"),
+		SSLMode:  getEnv("DB_SSLMODE", "disable"),
+	}
+
 	return &Config{
 		Port:    ":" + getEnv("PORT", "8080"),
 		Logger:  logger,
 		BaseURL: getEnv("BASE_URL", "http://localhost:3000"),
 		Env:     getEnv("ENV", "development"),
+		DB:      db,
 	}
 }
 

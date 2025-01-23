@@ -6,15 +6,17 @@ import (
 	"journaling-be/pkg/middleware"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
 type Server struct {
 	app    *fiber.App
 	logger *zap.Logger
+	db     *sqlx.DB
 }
 
-func NewServer(cfg *config.Config) *Server {
+func NewServer(cfg *config.Config, db *sqlx.DB) *Server {
 	app := fiber.New()
 
 	// Middleware
@@ -22,11 +24,12 @@ func NewServer(cfg *config.Config) *Server {
 
 	// Routes
 	api := app.Group("/api/v1")
-	handler.RegisterRoutes(api)
+	handler.RegisterRoutes(api, db)
 
 	return &Server{
 		app:    app,
 		logger: cfg.Logger,
+		db:     db,
 	}
 }
 

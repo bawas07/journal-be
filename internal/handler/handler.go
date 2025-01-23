@@ -2,21 +2,22 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/jmoiron/sqlx"
 )
 
 type Handler struct {
-	// Add service dependencies here
+	db *sqlx.DB
 }
 
-func NewHandler() *Handler {
+func NewHandler(db *sqlx.DB) *Handler {
 	return &Handler{
-		// Initialize services here
+		db: db,
 	}
 }
 
-func RegisterRoutes(router fiber.Router) {
-	h := NewHandler()
-	
+func RegisterRoutes(router fiber.Router, db *sqlx.DB) {
+	h := NewHandler(db)
+
 	router.Get("/health", h.HealthCheck)
 }
 
