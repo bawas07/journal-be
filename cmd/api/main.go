@@ -15,8 +15,8 @@ func main() {
 	srv := server.NewServer(cfg)
 
 	// Start server
-	log.Printf("Server started on %s", cfg.ServerAddress)
-	if err := srv.Listen(cfg.ServerAddress); err != nil {
+	log.Printf("Server started on %s", cfg.Port)
+	if err := srv.Listen(cfg.Port); err != nil {
 		log.Fatalf("Server error: %v", err)
 	}
 }

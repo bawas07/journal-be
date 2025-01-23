@@ -11,15 +11,15 @@ func HttpLogger(logger *zap.Logger) fiber.Handler {
 			zap.String("method", c.Method()),
 			zap.String("path", c.Path()),
 		)
-		
+
 		err := c.Next()
-		
+
 		logger.Info("Request completed",
 			zap.Int("status", c.Response().StatusCode()),
 			zap.String("method", c.Method()),
 			zap.String("path", c.Path()),
 		)
-		
+
 		return err
 	}
 }

@@ -28,6 +28,9 @@ go.work
 .env
 .env.local
 
+# Example environment file (should be committed)
+!.env.example
+
 # Log files
 *.log
 
@@ -43,3 +46,6 @@ build/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Temporary Folder
+tmp
