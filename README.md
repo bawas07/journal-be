@@ -1,35 +1,67 @@
-# Journaling BE
+# Journaling Backend
 
-A REST API server built with Go and Fiber
+A backend service for journaling application.
 
-## Development Setup
+## Getting Started
 
-1. Install dependencies:
-   ```bash
-   go mod tidy
-   ```
+### Prerequisites
 
-2. Install Air for hot reload:
-   ```bash
-   go install github.com/air-verse/air@latest
-   ```
+- Go 1.22+
+- PostgreSQL
 
-3. Copy the example environment file:
-   ```bash
-   cp .env.example .env
-   ```
+### Installation
 
-4. Start the development server:
-   ```bash
-   air
-   ```
+1. Clone the repository
+2. Run `go mod download` to install dependencies
+3. Create `.env` file from `.env.example` and update the values
+4. Start PostgreSQL server
 
-The server will automatically reload when you make changes to .env or Go files.
+### Running the Application
 
-## Configuration
+```bash
+go run cmd/api/main.go
+```
 
-Edit the `.env` file to configure the application.
+### Database Migrations
 
-## API Documentation
+Migrations are managed using the `migrate` CLI tool.
 
-Coming soon...
+#### Applying Migrations
+
+```bash
+go run cmd/migrate/main.go -cmd up
+```
+
+#### Rolling Back Migrations
+
+```bash
+go run cmd/migrate/main.go -cmd down
+```
+
+#### Applying/Rolling Back Specific Number of Migrations
+
+```bash
+go run cmd/migrate/main.go -cmd up -steps 2
+go run cmd/migrate/main.go -cmd down -steps 1
+```
+
+#### Creating New Migrations
+
+To create a new migration:
+
+```bash
+go run cmd/migrate/main.go -cmd create -name <migration_name>
+```
+
+This will create two files in the migrations directory:
+
+-   `<timestamp>_<migration_name>.up.sql`
+-   `<timestamp>_<migration_name>.down.sql`
+
+Edit these files to add your migration SQL statements.
+
+### Migration File Naming Convention
+
+-   Files must follow the pattern: `<timestamp>_<description>.up.sql` and `<timestamp>_<description>.down.sql`
+-   Timestamp format: YYYYMMDDHHMMSS
+-   Description should be short and descriptive using snake_case
