@@ -1,4 +1,4 @@
-module journaling-be
+module mindscribe-be
 
 go 1.22.0
 
@@ -28,5 +28,6 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	golang.org/x/sys v0.25.0 // indirect
+	golang.org/x/crypto v0.32.0 // indirect
+	golang.org/x/sys v0.29.0 // indirect
 )

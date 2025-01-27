@@ -1,28 +1,26 @@
 package handler
 
 import (
-	"github.com/gofiber/fiber/v2"
+	userhandlers "mindscribe-be/internal/handler/user-handlers"
+
 	"github.com/jmoiron/sqlx"
+	"go.uber.org/zap"
 )
 
 type Handler struct {
-	db *sqlx.DB
+	Index *IndexHandler
+	User  *userhandlers.UserHandler
 }
 
-func NewHandler(db *sqlx.DB) *Handler {
+func NewHandler(db *sqlx.DB, log *zap.Logger) *Handler {
+	log.Info("Handler: Starting...")
+	log.Info("Handler: Setting Index Handler")
+	indexHandler := NewIndexHandler(db, log)
+	log.Info("Handler: Setting User Handler")
+	userHandler := userhandlers.NewUserHandler(db, log)
+	log.Info("Handler: Completed")
 	return &Handler{
-		db: db,
+		Index: indexHandler,
+		User:  userHandler,
 	}
-}
-
-func RegisterRoutes(router fiber.Router, db *sqlx.DB) {
-	h := NewHandler(db)
-
-	router.Get("/health", h.HealthCheck)
-}
-
-func (h *Handler) HealthCheck(c *fiber.Ctx) error {
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"status": "OK",
-	})
 }

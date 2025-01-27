@@ -1,9 +1,11 @@
 package server
 
 import (
-	"journaling-be/internal/handler"
-	"journaling-be/pkg/config"
-	"journaling-be/pkg/middleware"
+	"mindscribe-be/internal/handler"
+	"mindscribe-be/pkg/config"
+	"mindscribe-be/pkg/logger"
+	"mindscribe-be/pkg/middleware"
+	"mindscribe-be/pkg/route"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
@@ -18,22 +20,27 @@ type Server struct {
 
 func NewServer(cfg *config.Config, db *sqlx.DB) *Server {
 	app := fiber.New()
-
+	log := logger.Logger()
+	logger := middleware.HttpLogger(log)
 	// Middleware
-	app.Use(middleware.HttpLogger(cfg.Logger))
+	app.Use(logger)
+
+	// Handlers
+	h := handler.NewHandler(db, log)
 
 	// Routes
-	api := app.Group("/api/v1")
-	handler.RegisterRoutes(api, db)
+	route.RegisterRoutes(app, h, log)
 
 	return &Server{
 		app:    app,
-		logger: cfg.Logger,
+		logger: log,
 		db:     db,
 	}
 }
 
 func (s *Server) Listen(addr string) error {
-	s.logger.Info("Starting server", zap.String("address", addr))
+	s.logger.Info("====================================")
+	s.logger.Info("Complete!")
+	s.logger.Info("====================================")
 	return s.app.Listen(addr)
 }

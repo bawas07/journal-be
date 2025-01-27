@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"github.com/joho/godotenv"
-	"go.uber.org/zap"
 )
 
 type DBConfig struct {
@@ -18,12 +17,17 @@ type DBConfig struct {
 	SSLMode  string
 }
 
+type LogConfig struct {
+	LogToFile string
+	LogLevel  string
+}
+
 type Config struct {
 	Port    string
-	Logger  *zap.Logger
 	BaseURL string
 	Env     string
 	DB      DBConfig
+	Logger  LogConfig
 }
 
 func Load() *Config {
@@ -33,10 +37,6 @@ func Load() *Config {
 		log.Println("No .env file found, using environment variables")
 	}
 
-	// Initialize logger
-	logger, _ := zap.NewProduction()
-	defer logger.Sync()
-
 	db := DBConfig{
 		Host:     getEnv("DB_HOST", "localhost"),
 		Port:     getEnv("DB_PORT", "5432"),
@@ -44,6 +44,11 @@ func Load() *Config {
 		Password: getEnv("DB_PASSWORD", ""),
 		Name:     getEnv("DB_NAME", "journaling"),
 		SSLMode:  getEnv("DB_SSLMODE", "disable"),
+	}
+
+	logger := LogConfig{
+		LogToFile: getEnv("LOG_TO_FILE", "false"),
+		LogLevel:  getEnv("LOG_LEVEL", "info"),
 	}
 
 	return &Config{
