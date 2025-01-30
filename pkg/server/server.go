@@ -2,6 +2,8 @@ package server
 
 import (
 	"mindscribe-be/internal/handler"
+	"mindscribe-be/internal/repository"
+	"mindscribe-be/internal/service"
 	"mindscribe-be/pkg/config"
 	"mindscribe-be/pkg/logger"
 	"mindscribe-be/pkg/middleware"
@@ -26,8 +28,13 @@ func NewServer(cfg *config.Config, db *sqlx.DB) *Server {
 	app.Use(logger)
 
 	// Handlers
-	h := handler.NewHandler(db, log, cfg)
-
+	log.Info("====================================")
+	r := repository.NewRepo(log, cfg)
+	log.Info("====================================")
+	s := service.NewService(db, log, cfg, r)
+	log.Info("====================================")
+	h := handler.NewHandler(db, log, cfg, s)
+	log.Info("====================================")
 	// Routes
 	route.RegisterRoutes(app, h, log)
 

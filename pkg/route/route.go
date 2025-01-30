@@ -2,6 +2,7 @@ package route
 
 import (
 	"mindscribe-be/internal/handler"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"go.uber.org/zap"
@@ -27,6 +28,8 @@ func NewRouter(app *fiber.App, h *handler.Handler, logger *zap.Logger) *Router {
 // Setup registers all application routes
 func (r *Router) Setup() {
 	// Log all routes being registered
+	start := time.Now()
+
 	r.log.Info("Routes: Starting...")
 
 	// Add HTTP logger middleware
@@ -37,7 +40,8 @@ func (r *Router) Setup() {
 	// Health check route
 	v1.Get("/health", r.handler.Index.HealthCheck)
 
-	r.log.Info("Routes: Completed")
+	duration := time.Since(start)
+	r.log.Info("Routes: Completed", zap.Duration("duration", duration))
 }
 
 // RegisterRoutes is a helper function to setup routes on an app instance

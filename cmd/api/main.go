@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -13,6 +14,8 @@ import (
 )
 
 func main() {
+	start := time.Now()
+
 	// Load configuration
 	cfg := config.Load()
 	logger.Init(cfg)
@@ -31,8 +34,9 @@ func main() {
 
 	// Initialize server with database connection
 	srv := server.NewServer(cfg, db)
+	duration := time.Since(start)
 
-	log.Sugar().Infof("Server started on %s", cfg.Port)
+	log.Sugar().Infof("Server started on %s: %s", cfg.Port, duration)
 	if err := srv.Listen(cfg.Port); err != nil {
 		log.Fatal("Server error", zap.Error(err))
 	}

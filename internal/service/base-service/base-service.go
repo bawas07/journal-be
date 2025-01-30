@@ -1,6 +1,7 @@
 package baseservice
 
 import (
+	"mindscribe-be/internal/repository"
 	"mindscribe-be/pkg/config"
 
 	"github.com/jmoiron/sqlx"
@@ -11,12 +12,14 @@ type BaseService struct {
 	Logger *zap.Logger
 	DB     *sqlx.DB
 	Config *config.Config
+	Repo   *repository.Repository
 }
 
-func NewBaseService(db *sqlx.DB, log *zap.Logger, cfg *config.Config) *BaseService {
+func NewBaseService(db *sqlx.DB, log *zap.Logger, cfg *config.Config, repo *repository.Repository) *BaseService {
 	return &BaseService{
 		Logger: log,
 		Config: cfg,
 		DB:     db,
+		Repo:   repo,
 	}
 }
