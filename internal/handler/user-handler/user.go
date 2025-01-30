@@ -1,27 +1,27 @@
-package userhandlers
+package userhandler
 
 import (
 	"database/sql"
 	"errors"
 	"time"
 
+	basehandler "mindscribe-be/internal/handler/base-handler"
 	"mindscribe-be/internal/models"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
-	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserHandler struct {
-	DB     *sqlx.DB
-	logger *zap.Logger
+	DB   *sqlx.DB
+	base *basehandler.BaseHandler
 }
 
-func NewUserHandler(db *sqlx.DB, log *zap.Logger) *UserHandler {
+func NewUserHandler(db *sqlx.DB, base *basehandler.BaseHandler) *UserHandler {
 	return &UserHandler{
-		DB:     db,
-		logger: log,
+		DB:   db,
+		base: base,
 	}
 }
 

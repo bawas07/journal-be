@@ -1,23 +1,27 @@
 package handler
 
 import (
-	userhandlers "mindscribe-be/internal/handler/user-handlers"
+	basehandler "mindscribe-be/internal/handler/base-handler"
+	indexhandler "mindscribe-be/internal/handler/index-handler"
+	userhandler "mindscribe-be/internal/handler/user-handler"
+	"mindscribe-be/pkg/config"
 
 	"github.com/jmoiron/sqlx"
 	"go.uber.org/zap"
 )
 
 type Handler struct {
-	Index *IndexHandler
-	User  *userhandlers.UserHandler
+	Index *indexhandler.IndexHandler
+	User  *userhandler.UserHandler
 }
 
-func NewHandler(db *sqlx.DB, log *zap.Logger) *Handler {
+func NewHandler(db *sqlx.DB, log *zap.Logger, cfg *config.Config) *Handler {
 	log.Info("Handler: Starting...")
+	base := basehandler.NewBaseHandler(log, cfg)
 	log.Info("Handler: Setting Index Handler")
-	indexHandler := NewIndexHandler(db, log)
+	indexHandler := indexhandler.NewIndexHandler(db, base)
 	log.Info("Handler: Setting User Handler")
-	userHandler := userhandlers.NewUserHandler(db, log)
+	userHandler := userhandler.NewUserHandler(db, base)
 	log.Info("Handler: Completed")
 	return &Handler{
 		Index: indexHandler,

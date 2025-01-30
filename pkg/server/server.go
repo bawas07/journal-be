@@ -26,7 +26,7 @@ func NewServer(cfg *config.Config, db *sqlx.DB) *Server {
 	app.Use(logger)
 
 	// Handlers
-	h := handler.NewHandler(db, log)
+	h := handler.NewHandler(db, log, cfg)
 
 	// Routes
 	route.RegisterRoutes(app, h, log)
