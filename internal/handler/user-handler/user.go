@@ -3,14 +3,12 @@ package userhandler
 import (
 	"database/sql"
 	"errors"
-	"time"
 
 	basehandler "mindscribe-be/internal/handler/base-handler"
-	"mindscribe-be/internal/models"
+	"mindscribe-be/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type UserHandler struct {
@@ -46,41 +44,16 @@ func (h *UserHandler) Register(c *fiber.Ctx) error {
 		})
 	}
 
-	// Hash password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Failed to process password",
-		})
-	}
+	err, user := h.base.Service.User.CreateUser(c.Context(), req.Email, req.Username, req.Password)
 
-	// Create user
-	user := models.User{
-		Email:     req.Email,
-		Username:  req.Username,
-		Password:  string(hashedPassword),
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-	}
-
-	// Insert into database
-	err = h.DB.QueryRow(`
-        INSERT INTO users (email, username, password, created_at, updated_at)
-        VALUES ($1, $2, $3, $4, $5)
-        RETURNING id
-    `, user.Email, user.Username, user.Password, user.CreatedAt, user.UpdatedAt).Scan(&user.ID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-				"error": "Failed to create user",
-			})
+			return h.base.Res.FailWithMessage(c, response.GeneralBadRequest, "Failed to create user", fiber.Map{})
 		}
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"error": "Database error",
-		})
+		return h.base.Res.FailWithMessage(c, response.GeneralServerError, "Failed to create user", fiber.Map{})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
+	return h.base.Res.Ok(c, response.GeneralAccepted, fiber.Map{
 		"id":         user.ID,
 		"email":      user.Email,
 		"username":   user.Username,

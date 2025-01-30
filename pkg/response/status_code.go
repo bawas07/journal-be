@@ -42,8 +42,8 @@ var statusCodeMap = map[StatusCode]struct {
 	GeneralConflict:      {fiber.StatusConflict, "Conflict"},
 	GeneralUnprocessable: {fiber.StatusTeapot, "Unable to process since I'm a Teapot"},
 
-	GeneralServerError: {fiber.StatusInternalServerError, "Internal Server Error"},
-	GeneralUnavailable: {fiber.StatusServiceUnavailable, "Service Unavailable"},
+	GeneralServerError: {fiber.StatusInternalServerError, "Internal Server Error, Please try again later"},
+	GeneralUnavailable: {fiber.StatusServiceUnavailable, "Service Unavailable, Please try again later"},
 }
 
 // GetHTTPCode returns the corresponding HTTP status code
