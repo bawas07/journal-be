@@ -1,24 +1,20 @@
-package userhandler
+package handler
 
 import (
 	"database/sql"
 	"errors"
 
-	basehandler "mindscribe-be/internal/handler/base-handler"
 	"mindscribe-be/pkg/response"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/jmoiron/sqlx"
 )
 
 type UserHandler struct {
-	DB   *sqlx.DB
-	base *basehandler.BaseHandler
+	base *BaseHandler
 }
 
-func NewUserHandler(db *sqlx.DB, base *basehandler.BaseHandler) *UserHandler {
+func newUserHandler(base *BaseHandler) *UserHandler {
 	return &UserHandler{
-		DB:   db,
 		base: base,
 	}
 }
@@ -44,7 +40,7 @@ func (h *UserHandler) Register(c *fiber.Ctx) error {
 		})
 	}
 
-	err, user := h.base.Service.User.CreateUser(c.Context(), req.Email, req.Username, req.Password)
+	err, user := h.base.Service.User.Create(c.Context(), req.Email, req.Username, req.Password)
 
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

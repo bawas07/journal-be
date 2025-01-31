@@ -1,18 +1,17 @@
-package userrepository
+package repository
 
 import (
 	"context"
 	"mindscribe-be/internal/models"
-	baserepository "mindscribe-be/internal/repository/base-repository"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type UserRepo struct {
-	base *baserepository.BaseRepository
+	base *BaseRepository
 }
 
-func NewUserRepo(base *baserepository.BaseRepository) *UserRepo {
+func NewUserRepo(base *BaseRepository) *UserRepo {
 	return &UserRepo{
 		base: base,
 	}

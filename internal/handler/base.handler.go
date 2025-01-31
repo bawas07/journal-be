@@ -1,4 +1,4 @@
-package basehandler
+package handler
 
 import (
 	"mindscribe-be/internal/service"
@@ -15,7 +15,7 @@ type BaseHandler struct {
 	Service *service.Service
 }
 
-func NewBaseHandler(log *zap.Logger, cfg *config.Config, service *service.Service) *BaseHandler {
+func newBaseHandler(log *zap.Logger, cfg *config.Config, service *service.Service) *BaseHandler {
 	return &BaseHandler{
 		Logger:  log,
 		Res:     response.New(),

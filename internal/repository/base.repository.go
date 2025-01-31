@@ -1,4 +1,4 @@
-package baserepository
+package repository
 
 import "mindscribe-be/pkg/config"
 
@@ -6,7 +6,7 @@ type BaseRepository struct {
 	Config *config.Config
 }
 
-func New(config *config.Config) *BaseRepository {
+func newBaseRepo(config *config.Config) *BaseRepository {
 	return &BaseRepository{
 		Config: config,
 	}

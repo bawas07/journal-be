@@ -1,26 +1,25 @@
-package userservice
+package service
 
 import (
 	"context"
 	"errors"
 	"mindscribe-be/internal/models"
-	baseservice "mindscribe-be/internal/service/base-service"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
-	base *baseservice.BaseService
+	base *BaseService
 }
 
-func NewUserService(base *baseservice.BaseService) *UserService {
+func newUserService(base *BaseService) *UserService {
 	return &UserService{
 		base: base,
 	}
 }
 
-func (s *UserService) CreateUser(ctx context.Context, email string, username string, password string) (error, *models.User) {
+func (s *UserService) Create(ctx context.Context, email string, username string, password string) (error, *models.User) {
 	// Hash password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {

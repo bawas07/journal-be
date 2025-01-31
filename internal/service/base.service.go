@@ -1,4 +1,4 @@
-package baseservice
+package service
 
 import (
 	"mindscribe-be/internal/repository"
@@ -15,7 +15,7 @@ type BaseService struct {
 	Repo   *repository.Repository
 }
 
-func NewBaseService(db *sqlx.DB, log *zap.Logger, cfg *config.Config, repo *repository.Repository) *BaseService {
+func newBaseService(db *sqlx.DB, log *zap.Logger, cfg *config.Config, repo *repository.Repository) *BaseService {
 	return &BaseService{
 		Logger: log,
 		Config: cfg,

@@ -2,8 +2,6 @@ package service
 
 import (
 	"mindscribe-be/internal/repository"
-	baseservice "mindscribe-be/internal/service/base-service"
-	userservice "mindscribe-be/internal/service/user-service"
 	"mindscribe-be/pkg/config"
 	"time"
 
@@ -12,17 +10,20 @@ import (
 )
 
 type Service struct {
-	User *userservice.UserService
+	User *UserService
+	Post *PostService
 }
 
 func NewService(db *sqlx.DB, log *zap.Logger, cfg *config.Config, repo *repository.Repository) *Service {
 	start := time.Now()
 	log.Info("Service: Starting...")
-	base := baseservice.NewBaseService(db, log, cfg, repo)
-	user := userservice.NewUserService(base)
+	base := newBaseService(db, log, cfg, repo)
+	user := newUserService(base)
+	post := newPostService(base)
 	duration := time.Since(start)
-	log.Info("Service: Completed", zap.Duration("duration", duration))
+	log.Sugar().Infof("Service: Completed in %s", duration)
 	return &Service{
 		User: user,
+		Post: post,
 	}
 }

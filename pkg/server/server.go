@@ -33,7 +33,7 @@ func NewServer(cfg *config.Config, db *sqlx.DB) *Server {
 	log.Info("====================================")
 	s := service.NewService(db, log, cfg, r)
 	log.Info("====================================")
-	h := handler.NewHandler(db, log, cfg, s)
+	h := handler.NewHandler(log, cfg, s)
 	log.Info("====================================")
 	// Routes
 	route.RegisterRoutes(app, h, log)

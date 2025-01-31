@@ -41,7 +41,7 @@ func (r *Router) Setup() {
 	v1.Get("/health", r.handler.Index.HealthCheck)
 
 	duration := time.Since(start)
-	r.log.Info("Routes: Completed", zap.Duration("duration", duration))
+	r.log.Sugar().Infof("Routes: Completed in %s", duration)
 }
 
 // RegisterRoutes is a helper function to setup routes on an app instance

@@ -1,7 +1,6 @@
-package indexhandler
+package handler
 
 import (
-	basehandler "mindscribe-be/internal/handler/base-handler"
 	"mindscribe-be/pkg/response"
 	"time"
 
@@ -11,12 +10,11 @@ import (
 
 type IndexHandler struct {
 	DB   *sqlx.DB
-	base *basehandler.BaseHandler
+	base *BaseHandler
 }
 
-func NewIndexHandler(db *sqlx.DB, base *basehandler.BaseHandler) *IndexHandler {
+func newIndexHandler(base *BaseHandler) *IndexHandler {
 	return &IndexHandler{
-		DB:   db,
 		base: base,
 	}
 }
