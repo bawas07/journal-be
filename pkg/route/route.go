@@ -40,6 +40,9 @@ func (r *Router) Setup() {
 	// Health check route
 	v1.Get("/health", r.handler.Index.HealthCheck)
 
+	// User Auth route
+	v1.Post("/auth/register", r.handler.User.Register)
+
 	duration := time.Since(start)
 	r.log.Sugar().Infof("Routes: Completed in %s", duration)
 }

@@ -8,6 +8,7 @@ import (
 	"mindscribe-be/pkg/logger"
 	"mindscribe-be/pkg/middleware"
 	"mindscribe-be/pkg/route"
+	"mindscribe-be/pkg/validation"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jmoiron/sqlx"
@@ -33,7 +34,8 @@ func NewServer(cfg *config.Config, db *sqlx.DB) *Server {
 	log.Info("====================================")
 	s := service.NewService(db, log, cfg, r)
 	log.Info("====================================")
-	h := handler.NewHandler(log, cfg, s)
+	v := validation.NewValidate(db, log)
+	h := handler.NewHandler(log, cfg, s, v)
 	log.Info("====================================")
 	// Routes
 	route.RegisterRoutes(app, h, log)

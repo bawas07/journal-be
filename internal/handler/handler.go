@@ -3,6 +3,7 @@ package handler
 import (
 	"mindscribe-be/internal/service"
 	"mindscribe-be/pkg/config"
+	"mindscribe-be/pkg/validation"
 	"time"
 
 	"go.uber.org/zap"
@@ -13,11 +14,11 @@ type Handler struct {
 	User  *UserHandler
 }
 
-func NewHandler(log *zap.Logger, cfg *config.Config, service *service.Service) *Handler {
+func NewHandler(log *zap.Logger, cfg *config.Config, service *service.Service, validate *validation.Validate) *Handler {
 	start := time.Now()
 
 	log.Info("Handler: Starting...")
-	base := newBaseHandler(log, cfg, service)
+	base := newBaseHandler(log, cfg, service, validate)
 	log.Info("Handler: Setting Index Handler")
 	indexHandler := newIndexHandler(base)
 	log.Info("Handler: Setting User Handler")

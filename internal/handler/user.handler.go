@@ -20,9 +20,9 @@ func newUserHandler(base *BaseHandler) *UserHandler {
 }
 
 type RegisterRequest struct {
-	Email    string `json:"email"`
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Email    string `json:"email" validate:"required,email,isUnique=users;email"`
+	Username string `json:"username" validate:"required,min=2"`
+	Password string `json:"password" validate:"required,min=6"`
 }
 
 func (h *UserHandler) Register(c *fiber.Ctx) error {
@@ -33,12 +33,16 @@ func (h *UserHandler) Register(c *fiber.Ctx) error {
 		})
 	}
 
-	// Validate input
-	if req.Email == "" || req.Username == "" || req.Password == "" {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "All fields are required",
-		})
+	if err := h.base.Validate.ValidateStruct(req); err != nil {
+		return h.base.Res.ValidationError(c, err)
 	}
+
+	// // Validate input
+	// if req.Email == "" || req.Username == "" || req.Password == "" {
+	// 	return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+	// 		"error": "All fields are required",
+	// 	})
+	// }
 
 	err, user := h.base.Service.User.Create(c.Context(), req.Email, req.Username, req.Password)
 
